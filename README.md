@@ -2,8 +2,6 @@
 
 ## Decimal Comparison under Ambiguity: Mechanistic Analysis
 
-This repository contains code and data for a small mechanistic interpretability investigation conducted as part of the MATS 10.0 application (Neel Nanda stream).
-
 ### Overview
 We study a class of decimal comparison failures (e.g. "7.11 vs 7.8") and test whether they admit a simple, layer-localized mechanistic explanation.
 
