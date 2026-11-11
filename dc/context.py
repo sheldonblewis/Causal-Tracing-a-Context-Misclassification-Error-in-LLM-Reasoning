@@ -6,6 +6,7 @@ position.
 
     python -m dc.context baseline   # which number wins under each reading
     python -m dc.context patch      # restore the decimal run's activations into the version run
+    python -m dc.context figure     # figures/context_patching.png
 """
 
 import json
@@ -111,6 +112,34 @@ def patch():
     print(mean.round(2).iloc[::4])
 
 
+def figure():
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    df = pd.read_csv(OUT / "context_patching.csv")
+    g = df.groupby(["segment", "layer"])["effect"]
+    mean, sem = g.mean().unstack(0), g.sem().unstack(0)
+    colors = {"context word": "#c9a46c", "the two numbers": "#7d93b8", "final token": "#5b8f6e", "everything else": "#bbb"}
+    fig, ax = plt.subplots(figsize=(7, 3.4), dpi=140)
+    for name, color in colors.items():
+        ax.plot(mean.index, mean[name], color=color, lw=1.8, label=name)
+        ax.fill_between(mean.index, mean[name] - sem[name], mean[name] + sem[name], color=color, alpha=0.15)
+    ax.axhline(0, color="k", lw=0.6)
+    ax.axhline(1, color="k", lw=0.6, ls="--")
+    ax.set_xlabel("layer (residual stream after it)")
+    ax.set_ylabel("share of the decimal reading restored")
+    ax.set_title(f"patching 'decimal' into 'version' prompts, phi-3-mini, {df.pair.nunique()} trap pairs")
+    for side in ("top", "right"):
+        ax.spines[side].set_visible(False)
+    ax.grid(alpha=0.25)
+    ax.legend(fontsize=7, frameon=False)
+    fig.tight_layout()
+    Path("figures").mkdir(exist_ok=True)
+    fig.savefig("figures/context_patching.png")
+
+
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
-    {"baseline": baseline, "patch": patch}[sys.argv[1]]()
+    {"baseline": baseline, "patch": patch, "figure": figure}[sys.argv[1]]()
