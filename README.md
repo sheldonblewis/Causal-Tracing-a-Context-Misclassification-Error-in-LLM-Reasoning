@@ -2,7 +2,7 @@
 
 A small mechanistic interpretability study of a well-known failure: language models sometimes say 7.11 is larger than 7.8. As decimals, 7.8 is larger; as version numbers (or chapter numbers), 7.11 comes later. Which answer is "right" depends on how the context is read, and the question is where in the network that reading lives.
 
-Model: `microsoft/Phi-3-mini-4k-instruct`, run in fp16 on Apple MPS. The study began as part of a MATS 10.0 application (Neel Nanda stream).
+Model: `microsoft/Phi-3-mini-4k-instruct`, run in fp16 on Apple MPS.
 
 ## 1. Behaviour
 
